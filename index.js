@@ -35,6 +35,14 @@ bot.on('message', function(message) {
     if(message.content.toLowerCase() === '/dilbert') {
         dilbert.getDilbertStrip(sendEmbedMessage);
     }
+
+    if(message.content.toLowerCase() === '/echo') {
+        message.channel.send('ECHO');
+        message.channel.send('ECHo');
+        message.channel.send('ECho');
+        message.channel.send('Echo');
+        message.channel.send('echo');
+    }
     
     function sendEmbedMessage(data) {
         message.channel.send(data);
