@@ -43,6 +43,15 @@ bot.on('message', function(message) {
         message.channel.send('Echo');
         message.channel.send('echo');
     }
+
+    if(message.guild.id !== "329759300526407680") {
+        return;
+    }
+
+    // Server specific magic
+    if(message.content.toLowerCase().includes('joshua')) {
+        message.channel.send('https://drive.google.com/file/d/1JQ3lYbHxGa-KbctUAtepN1R-rPA5fB9r/view?usp=sharing');
+    }
     
     function sendEmbedMessage(data) {
         message.channel.send(data);
