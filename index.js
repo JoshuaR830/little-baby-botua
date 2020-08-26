@@ -1,10 +1,19 @@
-require('dotenv').config();
+const path = require('path');
+
+if(process.env.NODE_ENV !== 'production') {
+    console.log("Hello")
+    require('dotenv').config({path: path.resolve(__dirname, '.env')});
+}
+
+const wilbur = require('./src/wilbur/wilburCardCreator')
+const dilbert = require('./src/dilbert/dilbert')
+
+console.log("Hi")
+
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const https = require('https');
 
 const TOKEN = process.env.TOKEN;
-const wilburApiGatewayBaseUrl = 'https://7rxf8z5z9h.execute-api.eu-west-2.amazonaws.com/v0/lambda';
 
 bot.login(TOKEN);
 
@@ -20,30 +29,15 @@ bot.on('message', function(message) {
     }
 
     if(message.content.toLowerCase() === '/wilbur') {
-        const url = `${wilburApiGatewayBaseUrl}?imageTime=random&storyItemNumber=1`;
-
-        https.get(url, (response) => {
-            let data = '';
-
-            response.on('data', (chunk) => {
-                data += chunk;
-            });
-
-            response.on('end', () =>{ 
-
-                var parsed = JSON.parse(data);
-
-                let wilburCard = new Discord.MessageEmbed()
-                    .setTitle(parsed.Title)
-                    .setColor("#607D8B")
-                    .setImage(parsed.ImageUrl)
-                    .setDescription(parsed.Description);
-
-                message.channel.send(wilburCard);
-                console.log(JSON.parse(data));
-            });
-        }).on('error', (error) => {
-            console.log(`Something went wrong: ${error}`);
-        })
+        wilbur.createWilburCard(sendEmbedMessage);
+    }
+    
+    if(message.content.toLowerCase() === '/dilbert') {
+        dilbert.getDilbertStrip(sendEmbedMessage);
+    }
+    
+    function sendEmbedMessage(data) {
+        message.channel.send(data);
     }
 });
+

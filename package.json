@@ -1,9 +1,10 @@
 {
-  "name": "wilbur-discord-api",
+  "name": "little-baby-botua",
   "version": "1.0.0",
-  "description": "Allows you to request wilbur pictures from discord\u001b[1;5D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D",
+  "description": "A fun little project to get some funny content out there",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joshua Richardson",
