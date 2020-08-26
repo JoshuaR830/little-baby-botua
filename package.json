@@ -1,0 +1,14 @@
+{
+  "name": "wilbur-discord-api",
+  "version": "1.0.0",
+  "description": "Allows you to request wilbur pictures from discord\u001b[1;5D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joshua Richardson",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
