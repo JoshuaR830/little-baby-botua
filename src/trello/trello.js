@@ -9,6 +9,7 @@ if(process.env.NODE_ENV !== 'production') {
 }
 
 const joshuaBaseUrl = process.env.S3_BUCKET_BASE_URL
+console.log(process.env.S3_BUCKET_BASE_URL)
 
 const colors = {
     "green": "#32a852",

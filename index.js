@@ -25,11 +25,18 @@ bot.on('ready', () => {
 
 bot.on('message', function(message) {
     
+    let lowerCaseMessage = message.content.toLowerCase()
+    
     if(message.author.id === bot.user.id) {
         return;
     }
     
-    let lowerCaseMessage = message.content.toLowerCase()
+    if(process.env.NODE_ENV !== 'production') {
+        if(lowerCaseMessage.includes("update")) {
+            trello.getInProgress(sendEmbedMessage)
+        }
+    }
+
 
     if(lowerCaseMessage === '/wilbur') {
         wilbur.createWilburCard(sendEmbedMessage);
@@ -56,10 +63,12 @@ bot.on('message', function(message) {
         message.channel.send('https://drive.google.com/file/d/1JQ3lYbHxGa-KbctUAtepN1R-rPA5fB9r/view?usp=sharing');
     }
     
-    if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
-        trello.getInProgress(sendEmbedMessage)
+    if(process.env.NODE_ENV === 'production') {
+        if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
+            trello.getInProgress(sendEmbedMessage)
+        }
     }
-    
+
     function sendEmbedMessage(data) {
         message.channel.send(data);
     }
