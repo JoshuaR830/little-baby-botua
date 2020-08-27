@@ -7,6 +7,7 @@ if(process.env.NODE_ENV !== 'production') {
 
 const wilbur = require('./src/wilbur/wilburCardCreator')
 const dilbert = require('./src/dilbert/dilbert')
+const trello = require('./src/trello/trello')
 
 console.log("Hi")
 
@@ -23,34 +24,40 @@ bot.on('ready', () => {
 });
 
 bot.on('message', function(message) {
-
+    
     if(message.author.id === bot.user.id) {
         return;
     }
+    
+    let lowerCaseMessage = message.content.toLowerCase()
 
-    if(message.content.toLowerCase() === '/wilbur') {
+    if(lowerCaseMessage === '/wilbur') {
         wilbur.createWilburCard(sendEmbedMessage);
     }
     
-    if(message.content.toLowerCase() === '/dilbert') {
+    if(lowerCaseMessage === '/dilbert') {
         dilbert.getDilbertStrip(sendEmbedMessage);
     }
 
-    if(message.content.toLowerCase() === '/echo') {
+    if(lowerCaseMessage === '/echo') {
         message.channel.send('ECHO');
         message.channel.send('ECHo');
         message.channel.send('ECho');
         message.channel.send('Echo');
         message.channel.send('echo');
     }
-
+    
     if(message.guild.id !== "329759300526407680") {
         return;
     }
-
+    
     // Server specific magic
-    if(message.content.toLowerCase().includes('joshua')) {
+    if(lowerCaseMessage.includes('joshua')) {
         message.channel.send('https://drive.google.com/file/d/1JQ3lYbHxGa-KbctUAtepN1R-rPA5fB9r/view?usp=sharing');
+    }
+    
+    if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
+        trello.getInProgress(sendEmbedMessage)
     }
     
     function sendEmbedMessage(data) {
