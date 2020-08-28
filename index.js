@@ -9,6 +9,7 @@ const wilbur = require('./src/wilbur/wilburCardCreator')
 const dilbert = require('./src/dilbert/dilbert')
 const trello = require('./src/trello/trello')
 const weather = require('./src/weather/weather')
+const Commands = require('./src/commands')
 
 console.log("Hi")
 
@@ -36,6 +37,28 @@ bot.on('message', function(message) {
         if(lowerCaseMessage.includes("update")) {
             trello.getInProgress(sendMessage)
         }
+    }
+
+    if(lowerCaseMessage === '/help') {
+        let supportedCommands = [
+            new Commands('/wilbur', 'Get a random picture of Wilbur'),
+            new Commands('/dilbert', 'Get the daily Dilbert photo'),
+            new Commands('/echo', 'Something silly and meaningless'),
+            new Commands('/weather <City>', 'Get the weather for a specified city'),
+            new Commands('/weather <latitude> <longitude>', 'Get the weather at a specific latitude and longitude')
+        ]
+                
+        if(message.guild.id === "329759300526407680") {     
+            supportedCommands.push(new Commands('/joshua', 'Get the little baby Joshua video'));
+            supportedCommands.push(new Commands('/update', `Get an update about Joshua's current work in progress from Trello`));
+        }
+        
+        let helpMessage = "Here is a list of commands:\n";
+        supportedCommands.forEach(function(command) {
+            helpMessage += `${command.command} : ${command.description}\n`;
+        });
+
+        sendMessage(helpMessage)        
     }
 
     if(lowerCaseMessage === '/wilbur') {
