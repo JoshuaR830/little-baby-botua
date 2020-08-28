@@ -9,6 +9,7 @@ const wilbur = require('./src/wilbur/wilburCardCreator')
 const dilbert = require('./src/dilbert/dilbert')
 const trello = require('./src/trello/trello')
 const weather = require('./src/weather/weather')
+const cat = require('./src/cats/cat')
 const Commands = require('./src/commands')
 
 console.log("Hi")
@@ -41,6 +42,7 @@ bot.on('message', function(message) {
 
     if(lowerCaseMessage === '/help') {
         let supportedCommands = [
+            new Commands('/cat', 'Get a random cat picture'),
             new Commands('/wilbur', 'Get a random picture of Wilbur'),
             new Commands('/dilbert', 'Get the daily Dilbert photo'),
             new Commands('/echo', 'Something silly and meaningless'),
@@ -67,6 +69,10 @@ bot.on('message', function(message) {
     
     if(lowerCaseMessage === '/dilbert') {
         dilbert.getDilbertStrip(sendMessage);
+    }
+    
+    if(lowerCaseMessage === '/cat') {
+        cat.getRandomCatImage(sendMessage);
     }
 
     if(lowerCaseMessage === '/echo') {
