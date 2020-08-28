@@ -10,9 +10,8 @@ const dilbert = require('./src/dilbert/dilbert')
 const trello = require('./src/trello/trello')
 const weather = require('./src/weather/weather')
 const cat = require('./src/cats/cat')
+const friend = require('./src/friends/friends')
 const Commands = require('./src/commands')
-
-console.log("Hi")
 
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -37,6 +36,10 @@ bot.on('message', function(message) {
     if(process.env.NODE_ENV !== 'production') {
         if(lowerCaseMessage.includes("update")) {
             trello.getInProgress(sendMessage)
+        }
+
+        if(lowerCaseMessage.includes("jordan")) {
+            friend.getJordan(sendMessage)
         }
     }
 
@@ -104,6 +107,10 @@ bot.on('message', function(message) {
     
     if(message.guild.id !== "329759300526407680") {
         return;
+    }
+
+    if(lowerCaseMessage.includes("jordan")) {
+        friend.getJordan(sendMessage)
     }
     
     // Server specific magic
