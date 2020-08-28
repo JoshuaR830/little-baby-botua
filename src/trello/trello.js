@@ -4,7 +4,6 @@ const Discord = require('discord.js');
 
 if(process.env.NODE_ENV !== 'production') {
     const path = require('path');
-    console.log("Hello")
     require('dotenv').config({path: path.resolve(__dirname, '.env')});
 }
 
@@ -31,9 +30,6 @@ function getInProgress(sendCardInfo) {
     const trelloToken = process.env.TRELLO_TOKEN;
     const toDoTokenDocumentation = process.env.TO_DO_TOKEN_DOCUMENTATION
     const trelloUrl = `https://api.trello.com/1/lists/${toDoTokenDocumentation}/cards?key=${trelloKey}&token=${trelloToken}`;
-
-
-    fetch()
 
     fetch(trelloUrl, {
         method: 'GET'

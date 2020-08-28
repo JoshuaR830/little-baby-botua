@@ -8,6 +8,7 @@ if(process.env.NODE_ENV !== 'production') {
 const wilbur = require('./src/wilbur/wilburCardCreator')
 const dilbert = require('./src/dilbert/dilbert')
 const trello = require('./src/trello/trello')
+const weather = require('./src/weather/weather')
 
 console.log("Hi")
 
@@ -26,24 +27,23 @@ bot.on('ready', () => {
 bot.on('message', function(message) {
     
     let lowerCaseMessage = message.content.toLowerCase()
-    
+
     if(message.author.id === bot.user.id) {
         return;
     }
     
     if(process.env.NODE_ENV !== 'production') {
         if(lowerCaseMessage.includes("update")) {
-            trello.getInProgress(sendEmbedMessage)
+            trello.getInProgress(sendMessage)
         }
     }
 
-
     if(lowerCaseMessage === '/wilbur') {
-        wilbur.createWilburCard(sendEmbedMessage);
+        wilbur.createWilburCard(sendMessage);
     }
     
     if(lowerCaseMessage === '/dilbert') {
-        dilbert.getDilbertStrip(sendEmbedMessage);
+        dilbert.getDilbertStrip(sendMessage);
     }
 
     if(lowerCaseMessage === '/echo') {
@@ -52,6 +52,25 @@ bot.on('message', function(message) {
         message.channel.send('ECho');
         message.channel.send('Echo');
         message.channel.send('echo');
+    }
+
+    if(lowerCaseMessage.includes('weather')) {
+        if(lowerCaseMessage === '/weather') {
+            sendMessage("Please specify more either a city or latitude and longitude for example:");
+            sendMessage("/weather Carlisle");
+            sendMessage("/weather 54.476422 -3.042244");
+        } else {
+            var splitMessage = lowerCaseMessage.split(' ');
+
+            if (splitMessage.length === 3) {
+                let lat = splitMessage[1];
+                let lon = splitMessage[2];
+                weather.getWeatherByLatLon(sendMessage, lat, lon);
+            } else if (splitMessage.length === 2) {
+                let cityName = splitMessage[1];
+                weather.getWeatherByCity(sendMessage, cityName);
+            }
+        }
     }
     
     if(message.guild.id !== "329759300526407680") {
@@ -65,11 +84,11 @@ bot.on('message', function(message) {
     
     if(process.env.NODE_ENV === 'production') {
         if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
-            trello.getInProgress(sendEmbedMessage)
+            trello.getInProgress(sendMessage)
         }
     }
 
-    function sendEmbedMessage(data) {
+    function sendMessage(data) {
         message.channel.send(data);
     }
 });
