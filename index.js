@@ -1,7 +1,7 @@
 const path = require('path');
 
 if(process.env.NODE_ENV !== 'production') {
-    console.log("Hello")
+    console.log("Hi there")
     require('dotenv').config({path: path.resolve(__dirname, '.env')});
 }
 
@@ -20,13 +20,42 @@ const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
 
+andrewDiscordId = process.env.AndrewId;
+joshuaDiscordId = process.env.JoshuaId;
+theRoomChannelId = process.env.TheRoomChannelId;
 
 bot.on('ready', () => {
+    console.log("Yarr!!")
     console.log(bot.user.tag);
 });
 
+
+bot.on('voiceStateUpdate', (oldMember, newMember) => {
+    console.log("Hi")
+    if(process.env.NODE_ENV !== 'production') {
+        console.log("Hello")
+    }
+
+    if(newMember.channelID != null && newMember.channelID != undefined){
+        if(newMember.id === joshuaDiscordId) {
+            console.log("Hello Joshua")
+            theRoomChannel = bot.channels.cache.get('746048828368617501')
+            theRoomChannel.send(':tada: Hello Joshua :tada:')
+        }
+        
+        if(newMember.id === andrewDiscordId) {
+            console.log("Hello Andrew")
+            theRoomChannel = bot.channels.cache.get(theRoomChannelId)
+            theRoomChannel.send('Okay - so this might be the buggiest thing in town given that I sort of hacked out all of the numbers but...')
+            theRoomChannel.send('@here Breaking News! Andrew has joined the voice channel!')
+            theRoomChannel.send('If this is a bug and he has not joined the channel - this is a sad story - sorry for getting your hopes up')
+            theRoomChannel.send('But if he has...')
+            theRoomChannel.send(':tada: Hello Andrew! :tada:')
+        }
+    }
+})
+
 bot.on('message', function(message) {
-    
     let lowerCaseMessage = message.content.toLowerCase()
 
     if(message.author.id === bot.user.id) {
@@ -35,7 +64,7 @@ bot.on('message', function(message) {
     
     if(process.env.NODE_ENV !== 'production') {
         if(lowerCaseMessage.includes("update")) {
-            trello.getInProgress(sendMessage)
+            trello.getInProgress(sendMessage)           
         }
 
         if(lowerCaseMessage.includes("jordan")) {
