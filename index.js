@@ -38,19 +38,17 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
 
     if(newMember.channelID != null && newMember.channelID != undefined){
         if(newMember.id === joshuaDiscordId) {
-            console.log("Hello Joshua")
-            theRoomChannel = bot.channels.cache.get('746048828368617501')
-            theRoomChannel.send(':tada: Hello Joshua :tada:')
+            console.log("Hello Joshua");
+            testChannel = bot.channels.cache.get('746048828368617501');
+            testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
+            testChannel.send(':tada: Hello Joshua :tada:');
         }
         
         if(newMember.id === andrewDiscordId) {
-            console.log("Hello Andrew")
-            theRoomChannel = bot.channels.cache.get(theRoomChannelId)
-            theRoomChannel.send('Okay - so this might be the buggiest thing in town given that I sort of hacked out all of the numbers but...')
-            theRoomChannel.send('@here Breaking News! Andrew has joined the voice channel!')
-            theRoomChannel.send('If this is a bug and he has not joined the channel - this is a sad story - sorry for getting your hopes up')
-            theRoomChannel.send('But if he has...')
-            theRoomChannel.send(':tada: Hello Andrew! :tada:')
+            console.log("Hello Andrew");
+            theRoomChannel = bot.channels.cache.get(theRoomChannelId);
+            theRoomChannel.send('@here :rotating_light: Breaking News! :rotating_light: Andrew :AndyT: has joined the voice :mega: channel!');
+            theRoomChannel.send(':tada: Hello Andrew! :tada:');
         }
     }
 })
