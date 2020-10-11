@@ -20,9 +20,19 @@ const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
 
-andrewDiscordId = process.env.AndrewId;
+jordanDiscordId = process.env.JordanId;
 joshuaDiscordId = process.env.JoshuaId;
+dayleDiscordId = process.env.DayleId;
+declynDiscordId = process.env.DeclynId;
+jonnyDiscordId = process.env.JonnyId;
+lucasDiscordId = process.env.LucasId;
+callanDiscordId = process.env.CallanId;
+andrewDiscordId = process.env.AndrewId;
+martinDiscordId = process.env.MartinId;
+
 theRoomChannelId = process.env.TheRoomChannelId;
+
+const directMessagesToSend = [joshuaDiscordId]
 
 bot.on('ready', () => {
     console.log("Yarr!!")
@@ -39,20 +49,51 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     if(newMember.channelID != null && newMember.channelID != undefined){
         if(newMember.id === joshuaDiscordId) {
             console.log("Hello Joshua");
-            testChannel = bot.channels.cache.get('746048828368617501');
-            testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
-            testChannel.send(':tada: Hello Joshua :tada:');
-            bot.user.get(joshuaDiscordId).send("Hello");
+            // testChannel = bot.channels.cache.get('746048828368617501');
+            // testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
+            // testChannel.send(':tada: Hello Joshua :tada:');
+            sendJoinedDirectMessage("Joshua")
+        }
+        
+        if(newMember.id === jordanDiscordId) {
+            sendJoinedDirectMessage("Jordan");
+        }
+        if(newMember.id === dayleDiscordId) {
+            sendJoinedDirectMessage("Dayle");
+        }
+        if(newMember.id === declynDiscordId) {
+            sendJoinedDirectMessage("Declyn");
+        }
+        if(newMember.id === jonnyDiscordId) {
+            sendJoinedDirectMessage("Jonny");
+        }
+        if(newMember.id === lucasDiscordId) {
+            sendJoinedDirectMessage("Lucas");
+        }
+        if(newMember.id === callanDiscordId) {
+            sendJoinedDirectMessage("Callan");
+        }
+        if(newMember.id === martinDiscordId) {
+            sendJoinedDirectMessage("Martin");
         }
         
         if(newMember.id === andrewDiscordId) {
             console.log("Hello Andrew");
             theRoomChannel = bot.channels.cache.get(theRoomChannelId);
-            theRoomChannel.send('@here :rotating_light: Breaking News! :rotating_light: Andrew :AndyT: has joined the voice :mega: channel!');
+            theRoomChannel.send('@here :rotating_light: Breaking News! :rotating_light: Andrew has joined the voice :mega: channel!');
             theRoomChannel.send(':tada: Hello Andrew! :tada:');
+            bot.users.cache.get(joshuaDiscordId).send("Andrew joined the channel");
         }
     }
+
+    function sendJoinedDirectMessage(name) {
+        directMessagesToSend.forEach(function(id) {
+            console.log(id)
+            bot.users.cache.get(id).send(`${name} joined a voice channel`);
+        })
+    }  
 })
+
 
 bot.on('message', function(message) {
     let lowerCaseMessage = message.content.toLowerCase()
