@@ -42,6 +42,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             testChannel = bot.channels.cache.get('746048828368617501');
             testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
             testChannel.send(':tada: Hello Joshua :tada:');
+            bot.user.get(joshuaDiscordId).send("Hello");
         }
         
         if(newMember.id === andrewDiscordId) {
