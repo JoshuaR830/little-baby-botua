@@ -39,7 +39,14 @@ var connectedIds = []
 bot.on('ready', () => {
     console.log("Yarr!!")
     console.log(bot.user.tag);
+    sendUpdateMessage()
 });
+
+function sendUpdateMessage() {
+    directMessagesToSend.forEach(function(id) {
+        bot.users.cache.get(id).send("New version of Little Baby Botua ready to roll");
+    })
+}
 
 
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
@@ -115,7 +122,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             console.log(id)
             bot.users.cache.get(id).send(`${name} joined a voice channel`);
         })
-    }  
+    }
 })
 
 
