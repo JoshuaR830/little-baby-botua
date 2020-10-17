@@ -34,6 +34,8 @@ theRoomChannelId = process.env.TheRoomChannelId;
 
 const directMessagesToSend = [joshuaDiscordId]
 
+var connectedIds = []
+
 bot.on('ready', () => {
     console.log("Yarr!!")
     console.log(bot.user.tag);
@@ -46,7 +48,21 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
         console.log("Hello")
     }
 
-    if(newMember.channelID != null && newMember.channelID != undefined){
+    if(newMember.channelID != null && oldMember.channelID != null) {
+        sendJoinedDirectMessage("STOP")
+        return;
+    }
+
+    if(newMember.channelID != null && newMember.channelID != undefined) {
+       
+        // if(!connectedIds.includes(newMember.id)) {
+        //     sendJoinedDirectMessage("Adding to channel");
+        //     connectedIds.push(newMember.id);
+        // } else {
+        //     sendJoinedDirectMessage("Already in channel");
+        //     return;
+        // }
+
         if(newMember.id === joshuaDiscordId) {
             console.log("Hello Joshua");
             // testChannel = bot.channels.cache.get('746048828368617501');
@@ -54,7 +70,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             // testChannel.send(':tada: Hello Joshua :tada:');
             sendJoinedDirectMessage("Joshua")
         }
-        
+
         if(newMember.id === jordanDiscordId) {
             sendJoinedDirectMessage("Jordan");
         }
@@ -85,6 +101,14 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             bot.users.cache.get(joshuaDiscordId).send("Andrew joined the channel");
         }
     }
+
+    // if(oldMember.channelID != null && oldMember.channelID != undefined) {
+    //     if(connectedIds.includes(newMember.id)){
+    //         sendJoinedDirectMessage("Removing from channel");
+    //         let index = connectedIds.indexOf(newMember.id);
+    //         connectedIds.splice(index, 1);
+    //     }
+    // }
 
     function sendJoinedDirectMessage(name) {
         directMessagesToSend.forEach(function(id) {
