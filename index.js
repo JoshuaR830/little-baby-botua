@@ -39,7 +39,8 @@ var connectedIds = []
 bot.on('ready', () => {
     console.log("Yarr!!")
     console.log(bot.user.tag);
-    sendUpdateMessage()
+    // ToDo - fix this
+    // sendUpdateMessage()
 });
 
 function sendUpdateMessage() {
