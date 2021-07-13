@@ -52,9 +52,6 @@ function sendUpdateMessage() {
 
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
     console.log("Hi")
-    if(process.env.NODE_ENV !== 'production') {
-        console.log("Hello")
-    }
 
     if(newMember.channelID != null && oldMember.channelID != null) {
         return;
@@ -114,16 +111,6 @@ bot.on('message', function(message) {
 
     if(message.author.id === bot.user.id) {
         return;
-    }
-    
-    if(process.env.NODE_ENV !== 'production') {
-        if(lowerCaseMessage.includes("update")) {
-            trello.getInProgress(sendMessage)           
-        }
-
-        if(lowerCaseMessage.includes("jordan")) {
-            friend.getJordan(sendMessage)
-        }
     }
 
     if(lowerCaseMessage === '/help') {
@@ -192,6 +179,13 @@ bot.on('message', function(message) {
         return;
     }
 
+    allowedChannels = ['joshuas-updates', 'meme-spam']
+
+    // Don't send the following messages if in a forbidden channel
+    if (!allowedChannels.includes(message.channel.name)) {
+        return;
+    }
+
     if(lowerCaseMessage.includes("jordan")) {
         friend.getJordan(sendMessage)
     }
@@ -201,11 +195,11 @@ bot.on('message', function(message) {
         message.channel.send('https://drive.google.com/file/d/1JQ3lYbHxGa-KbctUAtepN1R-rPA5fB9r/view?usp=sharing');
     }
     
-    if(process.env.NODE_ENV === 'production') {
-        if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
-            trello.getInProgress(sendMessage)
-        }
-    }
+    // if(process.env.NODE_ENV === 'production') {
+    //     if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
+    //         trello.getInProgress(sendMessage)
+    //     }
+    // }
 
     function sendMessage(data) {
         message.channel.send(data);
