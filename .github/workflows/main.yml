@@ -25,9 +25,9 @@
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]
 
 name: Deploy to Amazon ECS
 
@@ -63,7 +63,6 @@ jobs:
         # push it to ECR so that it can
         # be deployed to ECS.
         pwd
-        cd five-ways-to-wellbeing-web
         ls
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -77,7 +76,7 @@ jobs:
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: joshua-richardson-dev
+        container-name: little-baby-botua
         image: ${{ steps.build-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
