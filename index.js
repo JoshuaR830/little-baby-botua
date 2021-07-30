@@ -1,4 +1,5 @@
 const path = require('path');
+const https = require('https');
 
 if(process.env.NODE_ENV !== 'production') {
     console.log("Hi there")
@@ -30,6 +31,10 @@ callanDiscordId = process.env.CallanId;
 andrewDiscordId = process.env.AndrewId;
 martinDiscordId = process.env.MartinId;
 
+const timeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/time';
+// const url = `${wilburApiGatewayBaseUrl}?id=timestamp=channelId=connectionStatus=`;
+
+
 theRoomChannelId = process.env.TheRoomChannelId;
 
 const directMessagesToSend = [joshuaDiscordId]
@@ -51,19 +56,31 @@ function sendUpdateMessage() {
 
 
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
-    console.log("Hi")
+    console.log(newMember)
 
+    // An existing user mutes and deafens
     if(newMember.channelID != null && oldMember.channelID != null) {
         return;
     }
 
-    if(newMember.channelID != null && newMember.channelID != undefined) {
+    // A new user joins
+    if(newMember.channelID !== null && newMember.channelID !== undefined) {
         if(newMember.id === joshuaDiscordId) {
             console.log("Hello Joshua");
             // testChannel = bot.channels.cache.get('746048828368617501');
             // testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
             // testChannel.send(':tada: Hello Joshua :tada:');
             sendJoinedDirectMessage("Joshua")
+
+            console.log(newMember.guild.joinedTimestamp)
+            console.log(newMember.guild.id)
+            console.log(newMember.channel.id)
+            
+            console.log(Date.now())
+
+
+            // time joined
+            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
 
         if(newMember.id === jordanDiscordId) {
@@ -96,11 +113,21 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             bot.users.cache.get(joshuaDiscordId).send("Andrew joined the channel");
         }
     }
+    else if (newMember.channelID === null || newMember.channelID === undefined) {
+        sendDisconnectedDirectMessage("Joshua");
+    }
 
     function sendJoinedDirectMessage(name) {
         directMessagesToSend.forEach(function(id) {
             console.log(id)
             bot.users.cache.get(id).send(`${name} joined a voice channel`);
+        })
+    }
+
+    function sendDisconnectedDirectMessage(name) {
+        directMessagesToSend.forEach(function(id) {
+            console.log(id)
+            bot.users.cache.get(id).send(`${name} left a voice channel`);
         })
     }
 })
@@ -205,4 +232,24 @@ bot.on('message', function(message) {
         message.channel.send(data);
     }
 });
+
+function sendHttpRequestToLambda(userId, timestamp, serverId, channelId, connectionStatus) {
+    const url = `${timeApiGatewayBaseUrl}?userId=${userId}&timestamp=${timestamp}&serverId=${serverId}&channelId=${channelId}&connectionStatus=${connectionStatus}`;
+    https.get(url, (response) => {
+        let data = '';
+
+        response.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        response.on('end', () =>{ 
+
+            // var parsed = JSON.parse(data);
+
+            console.log(data);
+        })
+    }).on('error', (error) => {
+        console.log(`Something went wrong: ${error}`);
+    });
+}
 
