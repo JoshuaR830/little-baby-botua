@@ -63,48 +63,25 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
         return;
     }
 
+    let name = whoIs(newMember.id)
+
     // A new user joins
     if(newMember.channelID !== null && newMember.channelID !== undefined) {
+
+        if (name != null) {
+            sendJoinedDirectMessage(name);
+        }
+
         if(newMember.id === joshuaDiscordId) {
             console.log("Hello Joshua");
             // testChannel = bot.channels.cache.get('746048828368617501');
             // testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
             // testChannel.send(':tada: Hello Joshua :tada:');
-            sendJoinedDirectMessage("Joshua")
-
-            console.log(newMember.guild.joinedTimestamp)
-            console.log(newMember.guild.id)
-            console.log(newMember.channel.id)
             
-            console.log(Date.now())
-
-
             // time joined
             sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
-
-        if(newMember.id === jordanDiscordId) {
-            sendJoinedDirectMessage("Jordan");
-        }
-        if(newMember.id === dayleDiscordId) {
-            sendJoinedDirectMessage("Dayle");
-        }
-        if(newMember.id === declynDiscordId) {
-            sendJoinedDirectMessage("Declyn");
-        }
-        if(newMember.id === jonnyDiscordId) {
-            sendJoinedDirectMessage("Jonny");
-        }
-        if(newMember.id === lucasDiscordId) {
-            sendJoinedDirectMessage("Lucas");
-        }
-        if(newMember.id === callanDiscordId) {
-            sendJoinedDirectMessage("Callan");
-        }
-        if(newMember.id === martinDiscordId) {
-            sendJoinedDirectMessage("Martin");
-        }
-        
+                        
         if(newMember.id === andrewDiscordId) {
             console.log("Hello Andrew");
             theRoomChannel = bot.channels.cache.get(theRoomChannelId);
@@ -114,7 +91,33 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
         }
     }
     else if (newMember.channelID === null || newMember.channelID === undefined) {
-        sendDisconnectedDirectMessage("Joshua");
+        let name = whoIs(newMember.id)
+        sendDisconnectedDirectMessage(name);
+    }
+
+    function whoIs(id) {
+        switch(id) {
+            case jordanDiscordId:
+                return "Jordan"
+            case joshuaDiscordId:
+                return "Joshua"
+            case dayleDiscordId:
+                return "Dayle"
+            case declynDiscordId:
+                return "Madalyn"
+            case jonnyDiscordId:
+                return "Jonny"
+            case lucasDiscordId:
+                return "Lucas"
+            case callanDiscordId:
+                return "Callan"
+            case martinDiscordId:
+                return "Martin"
+            case andrewDiscordId:
+                return "Andrew"
+            default:
+                return null;
+        }
     }
 
     function sendJoinedDirectMessage(name) {
