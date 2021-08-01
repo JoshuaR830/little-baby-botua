@@ -12,6 +12,7 @@ const trello = require('./src/trello/trello')
 const weather = require('./src/weather/weather')
 const cat = require('./src/cats/cat')
 const friend = require('./src/friends/friends')
+const timeGraph = require('./src/graphs/time')
 const Commands = require('./src/commands')
 
 const Discord = require('discord.js');
@@ -168,6 +169,10 @@ bot.on('message', function(message) {
 
     if(lowerCaseMessage === '/wilbur') {
         wilbur.createWilburCard(sendMessage);
+    }
+
+    if (lowerCaseMessage === "/time") {
+        timeGraph.getTimeGraph(sendMessage);
     }
     
     if(lowerCaseMessage === '/dilbert') {
