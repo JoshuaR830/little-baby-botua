@@ -15,7 +15,7 @@ async function getTimeGraph(callback) {
             data += chunk;
         }))
 
-        response.on('end', () => {
+        response.on('end', async () => {
             var parsedData = JSON.parse(data);
 
             const chart = new QuickChart();
