@@ -71,6 +71,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
 
         if (name != null) {
             sendJoinedDirectMessage(name);
+            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
 
         if(newMember.id === joshuaDiscordId) {
@@ -80,7 +81,6 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             // testChannel.send(':tada: Hello Joshua :tada:');
             
             // time joined
-            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
                         
         if(newMember.id === andrewDiscordId) {
@@ -93,7 +93,11 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     }
     else if (newMember.channelID === null || newMember.channelID === undefined) {
         let name = whoIs(newMember.id)
-        sendDisconnectedDirectMessage(name);
+
+        if (name != null) {
+            sendDisconnectedDirectMessage(name);
+            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, false)
+        }
     }
 
     function whoIs(id) {
