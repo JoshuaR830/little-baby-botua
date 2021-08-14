@@ -82,7 +82,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             console.log(friendsMap);
 
             sendJoinedDirectMessage(name);
-            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
+            sendHttpRequestToLambda(friend.sessionGuid, newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
 
         // if(newMember.id === joshuaDiscordId) {
@@ -112,7 +112,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
 
             leaver = friendsMap.get(newMember.id);
 
-            sendHttpRequestToLambda(newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
+            sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
         }
     }
 
@@ -261,8 +261,8 @@ bot.on('message', function(message) {
     }
 });
 
-function sendHttpRequestToLambda(userId, timestamp, serverId, channelId, connectionStatus) {
-    const url = `${timeApiGatewayBaseUrl}?userId=${userId}&timestamp=${timestamp}&serverId=${serverId}&channelId=${channelId}&connectionStatus=${connectionStatus}`;
+function sendHttpRequestToLambda(sessionId, userId, timestamp, serverId, channelId, connectionStatus) {
+    const url = `${timeApiGatewayBaseUrl}?sessionGuid=${sessionId}&userId=${userId}&timestamp=${timestamp}&serverId=${serverId}&channelId=${channelId}&connectionStatus=${connectionStatus}`;
     https.get(url, (response) => {
         let data = '';
 
