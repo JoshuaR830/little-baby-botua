@@ -1,5 +1,6 @@
 const path = require('path');
 const https = require('https');
+const {v4: uuidv4} = require('uuid')
 
 if(process.env.NODE_ENV !== 'production') {
     console.log("Hi there")
@@ -11,16 +12,20 @@ const dilbert = require('./src/dilbert/dilbert')
 const trello = require('./src/trello/trello')
 const weather = require('./src/weather/weather')
 const cat = require('./src/cats/cat')
-const friend = require('./src/friends/friends')
+const friendApi = require('./src/friends/friends')
+const Friend = require('./src/friends/friend.js')
 const timeGraph = require('./src/graphs/time')
 const Commands = require('./src/commands')
 
 const Discord = require('discord.js');
+const { cwd } = require('process');
 const bot = new Discord.Client();
 
 const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
+
+friendsMap = new Map();
 
 jordanDiscordId = process.env.JordanId;
 joshuaDiscordId = process.env.JoshuaId;
@@ -70,19 +75,25 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     if(newMember.channelID !== null && newMember.channelID !== undefined) {
 
         if (name != null) {
+            let friend = new Friend(uuidv4(), name, newMember.channelID, newMember.guild.id)
+            friendsMap.set(newMember.id, friend)
+            // friendsList.push({key: newMember.id, value: friend})
+
+            console.log(friendsMap);
+
             sendJoinedDirectMessage(name);
             sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
         }
 
-        if(newMember.id === joshuaDiscordId) {
-            console.log("Hello Joshua");
+        // if(newMember.id === joshuaDiscordId) {
+            // console.log("Hello Joshua");
             // testChannel = bot.channels.cache.get('746048828368617501');
             // testChannel.send('@here :rotating_light: Breaking News! :rotating_light: Joshua :AndyT: has joined the voice :mega: channel!');
             // testChannel.send(':tada: Hello Joshua :tada:');
             
             // time joined
-        }
-                        
+        // }
+
         if(newMember.id === andrewDiscordId) {
             console.log("Hello Andrew");
             theRoomChannel = bot.channels.cache.get(theRoomChannelId);
@@ -96,7 +107,12 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
 
         if (name != null) {
             sendDisconnectedDirectMessage(name);
-            sendHttpRequestToLambda(newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, false)
+
+            console.log(friendsMap.get(newMember.id));
+
+            leaver = friendsMap.get(newMember.id);
+
+            sendHttpRequestToLambda(newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
         }
     }
 
@@ -226,7 +242,7 @@ bot.on('message', function(message) {
     }
 
     if(lowerCaseMessage.includes("jordan")) {
-        friend.getJordan(sendMessage)
+        friendApi.getJordan(sendMessage)
     }
     
     // Server specific magic
