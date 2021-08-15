@@ -5,8 +5,10 @@ const wilburApiGatewayBaseUrl = 'https://7rxf8z5z9h.execute-api.eu-west-2.amazon
 
 const url = `${wilburApiGatewayBaseUrl}?imageTime=random&storyItemNumber=1`;
 
-function createWilburCard(callback) {
-    https.get(url, (response) => {
+function createWilburCard(callback, query) {
+    wilburUrl = `${wilburApiGatewayBaseUrl}?${query}`
+    console.log(wilburUrl);
+    https.get(wilburUrl, (response) => {
         let data = '';
 
         response.on('data', (chunk) => {

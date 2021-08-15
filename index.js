@@ -16,6 +16,8 @@ const friendApi = require('./src/friends/friends')
 const Friend = require('./src/friends/friend.js')
 const timeGraph = require('./src/graphs/time')
 const Commands = require('./src/commands')
+const commandManager = require('./src/commands/register-commands')
+const responseManager = require('./src/commands/command-response')
 
 const Discord = require('discord.js');
 const { cwd } = require('process');
@@ -36,9 +38,11 @@ lucasDiscordId = process.env.LucasId;
 callanDiscordId = process.env.CallanId;
 andrewDiscordId = process.env.AndrewId;
 martinDiscordId = process.env.MartinId;
+theRoomGuildId = process.env.TheRoomGuildId;
 
 const timeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/time';
 // const url = `${wilburApiGatewayBaseUrl}?id=timestamp=channelId=connectionStatus=`;
+
 
 
 theRoomChannelId = process.env.TheRoomChannelId;
@@ -48,18 +52,12 @@ const directMessagesToSend = [joshuaDiscordId]
 var connectedIds = []
 
 bot.on('ready', () => {
-    console.log("Yarr!!")
-    console.log(bot.user.tag);
-    // ToDo - fix this
-    // sendUpdateMessage()
+    commandManager.registerCommands(bot, theRoomGuildId)
 });
 
-function sendUpdateMessage() {
-    directMessagesToSend.forEach(function(id) {
-        bot.users.cache.get(id).send("New version of Little Baby Botua ready to roll");
-    })
-}
-
+bot.ws.on('INTERACTION_CREATE', async interaction => {
+    responseManager.manageResponse(bot, interaction);
+})
 
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
     console.log(newMember)
@@ -249,12 +247,6 @@ bot.on('message', function(message) {
     if(lowerCaseMessage.includes('joshua')) {
         message.channel.send('https://drive.google.com/file/d/1JQ3lYbHxGa-KbctUAtepN1R-rPA5fB9r/view?usp=sharing');
     }
-    
-    // if(process.env.NODE_ENV === 'production') {
-    //     if(lowerCaseMessage.includes("update") && message.channel.name === 'joshuas-updates') {
-    //         trello.getInProgress(sendMessage)
-    //     }
-    // }
 
     function sendMessage(data) {
         message.channel.send(data);
