@@ -9,6 +9,21 @@ function registerCommands(bot, id) {
     registerDilbertCommand(bot);
     registerWeatherCityCommand(bot);
     registerWeatherCoordCommand(bot);
+    registerHttpCatCommand(bot);
+}
+
+function registerHttpCatCommand(bot) {
+    bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
+        name: 'http-cat',
+        type: 1,
+        description: 'Get an http cat image',
+        options: [{
+            name: "status-code",
+            description: "the http status code",
+            type: 3,
+            required: true
+        }]
+    }})
 }
 
 function registerRandomCatCommand(bot) {

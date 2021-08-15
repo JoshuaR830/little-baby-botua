@@ -1,5 +1,6 @@
 const wilbur = require('./../wilbur/wilburCardCreator')
 const cat = require('./../cats/cat')
+const httpCat = require('./../cats/http-cat')
 const weather = require('./../weather/weather')
 const dilbert = require('./../dilbert/dilbert')
 const timeGraph = require('./../graphs/time')
@@ -31,9 +32,34 @@ function manageResponse(bot, interaction) {
         case "time":
             respondToTimeGraphCommand(bot, interaction);
             break;
+        case "http-cat":
+            respondToHttpCatCommand(bot, interaction);
         default:
             break;
     }
+}
+
+function respondToHttpCatCommand(bot, interaction) {
+    let statusCode = 0;
+    console.log(interaction)
+    interaction.data.options.forEach(option => {
+        console.log(option)
+        if(option.name === "status-code") {
+            statusCode = option.value;
+        }
+    });
+
+    httpCat.getHttpCatImage((messageContent) => {
+        bot.api.interactions(interaction.id, interaction.token).callback.post(
+            {
+                data: {
+                    type: 4,
+                    data: {
+                        content: messageContent
+                }
+            }
+        });
+    }, statusCode);
 }
 
 function respondToWeatherCoordsCommand(bot, interaction) {
