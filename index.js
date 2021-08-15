@@ -232,7 +232,7 @@ bot.on('message', function(message) {
         return;
     }
 
-    allowedChannels = ['joshuas-updates', 'meme-spam']
+    allowedChannels = ['joshuas-updates', 'meme-spam', "bits-n-bots"]
 
     // Don't send the following messages if in a forbidden channel
     if (!allowedChannels.includes(message.channel.name)) {
