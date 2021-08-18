@@ -73,8 +73,13 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     if(newMember.channelID !== null && newMember.channelID !== undefined) {
 
         if (name != null) {
+            if(friendsMap.has(newMember.id)) {
+                friendsMap.delete(newMember.id)
+            }
+
             let friend = new Friend(uuidv4(), name, newMember.channelID, newMember.guild.id)
             friendsMap.set(newMember.id, friend)
+            
             // friendsList.push({key: newMember.id, value: friend})
 
             console.log(friendsMap);
@@ -108,9 +113,12 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
 
             console.log(friendsMap.get(newMember.id));
 
-            leaver = friendsMap.get(newMember.id);
+            if(friendsMap.hasValue(newMember.id)) {
+                leaver = friendsMap.get(newMember.id);
+                sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
+                friendsMap.delete(newMember.id)
+            }
 
-            sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
         }
     }
 
