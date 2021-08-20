@@ -111,9 +111,8 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
         if (name != null) {
             sendDisconnectedDirectMessage(name);
 
-            console.log(friendsMap.get(newMember.id));
-
-            if(friendsMap.hasValue(newMember.id)) {
+            if(friendsMap.has(newMember.id)) {
+                console.log(friendsMap.get(newMember.id));
                 leaver = friendsMap.get(newMember.id);
                 sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
                 friendsMap.delete(newMember.id)
