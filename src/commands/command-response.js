@@ -29,11 +29,12 @@ function manageResponse(bot, interaction) {
         case "weather-coords":
             respondToWeatherCoordsCommand(bot, interaction);
             break;
-        case "time":
+        case "time-graph":
             respondToTimeGraphCommand(bot, interaction);
             break;
         case "http-cat":
             respondToHttpCatCommand(bot, interaction);
+            break;
         default:
             break;
     }
@@ -126,17 +127,46 @@ function respondToDilbertCommand(bot, interaction) {
 }
 
 function respondToTimeGraphCommand(bot, interaction) {
-    timeGraph.getTimeGraph((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        content: messageContent
-                }
-            }
-        });
+
+    let days = 0;
+
+    interaction.data.options.forEach(option => {
+        if(option.name === "days") {
+            days += option.value;
+        } else if (option.name === "months") {
+            days += (option.value * 30);
+        } else if (option.name === "years") {
+            days += (option.value * 365);
+        }
     });
+
+    // timeGraph.getTimeGraph((messageContent) => {
+    //     bot.api.interactions(interaction.id, interaction.token).callback.post(
+    //         {
+    //             data: {
+    //                 type: 4,
+    //                 data: {
+    //                     embeds: [messageContent]
+    //             }
+    //         }
+    //     });
+    // }, days);
+
+
+    bot.api.interactions(interaction.id, interaction.token).callback.post(
+        {
+            data: {
+                type: 4,
+                data: {
+                    content: "Collating your data, won't be long... (whistles)"
+            }
+        }
+    });
+
+    timeGraph.getTimeGraph((messageContent) => {
+        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    }, days);
+
 }
 
 function respondToRandomCatCommand(bot, interaction) {

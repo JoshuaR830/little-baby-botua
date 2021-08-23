@@ -1,3 +1,5 @@
+const { type } = require("os");
+
 var guildId = ''
 
 function registerCommands(bot, id) {
@@ -10,6 +12,7 @@ function registerCommands(bot, id) {
     registerWeatherCityCommand(bot);
     registerWeatherCoordCommand(bot);
     registerHttpCatCommand(bot);
+    registerTimeGraphCommand(bot);
 }
 
 function registerHttpCatCommand(bot) {
@@ -91,5 +94,31 @@ function registerWilburCommand(bot) {
         ]
     }})
 }
+
+function registerTimeGraphCommand(bot) {
+    bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
+        name: 'time-graph',
+        description: 'Get a graph of usage statistics for a selected time period',
+            options: [
+                {
+                    name: "days",
+                    description: "Number of days",
+                    type: 10,
+                },
+                {
+                    name: "months",
+                    description: "Number of months",
+                    type: 10,
+                },
+                {
+                    name: "years",
+                    description: "Number of years",
+                    type: 10,
+                }
+            ]
+        }
+    })
+}
+ 
 
 module.exports = {registerCommands : registerCommands};

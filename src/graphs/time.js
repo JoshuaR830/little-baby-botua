@@ -4,10 +4,10 @@ const https = require('https');
 
 const getTimeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/get-time';
 
-async function getTimeGraph(callback) {
+async function getTimeGraph(callback, days) {
     console.log("Time");
 
-    https.get(getTimeApiGatewayBaseUrl, (response) => {
+    https.get(`${getTimeApiGatewayBaseUrl}?days=${days}`, (response) => {
 
         data = "";
 
@@ -17,6 +17,8 @@ async function getTimeGraph(callback) {
 
         response.on('end', async () => {
             var parsedData = JSON.parse(data);
+
+            console.log(parsedData)
 
             const chart = new QuickChart();
             chart.setConfig({
