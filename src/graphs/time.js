@@ -24,34 +24,6 @@ async function getTimeGraph(callback, days) {
             chart.setConfig({
                 type: 'bar',
                 data: parsedData
-                // data: {
-                //     labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                //     datasets: [{
-                //         label: 'Andrew',
-                //         data: [1.5, 2, 3, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Dayle',
-                //         data: [1, 3, 6, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Jonny',
-                //         data: [1, 3, 6, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Jordan',
-                //         data: [1, 3, 9, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Joshua',
-                //         data: [1, 3, 10, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Lucas',
-                //         data: [1, 7, 6, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Madalyn',
-                //         data: [1, 3, 6, 2, 3, 5, 1]
-                //     }, {
-                //         label: 'Martin',
-                //         data: [1, 14, 8, 2, 3, 5, 1]
-                //     }]
-                // }
             })
 
             chart.setBackgroundColor("rgb(0,0,0)")
@@ -60,10 +32,10 @@ async function getTimeGraph(callback, days) {
         
             console.log(url)
             const chartMessage = new Discord.MessageEmbed()
-                .setTitle("Chart")
-                .setColor("#607D8B")
+                .setTitle("Time graph")
+                .setColor("#608b81")
                 .setImage(url)
-                .setDescription("Here is a chart");
+                .setDescription(`Here are the results for the previous ${days} days`);
         
             callback(chartMessage);
 
