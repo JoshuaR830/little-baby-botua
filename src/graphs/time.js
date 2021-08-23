@@ -53,6 +53,8 @@ async function getTimeGraph(callback, days) {
                 //     }]
                 // }
             })
+
+            chart.setBackgroundColor("rgb(0,0,0)")
         
             const url = await chart.getShortUrl();
         
