@@ -23,7 +23,7 @@ async function getTimeGraph(callback, days) {
             const barChart = new QuickChart();
             barChart.setConfig({
                 type: 'bar',
-                data: parsedData
+                data: parsedData.barGraph
             })
 
             barChart.setBackgroundColor("rgb(0,0,0)")
@@ -34,8 +34,8 @@ async function getTimeGraph(callback, days) {
 
             const pieChart = new QuickChart();
             pieChart.setConfig({
-                type: 'pie',
-                data: parsedData
+                type: 'doughnut',
+                data: parsedData.pieChart
             })
 
             pieChart.setBackgroundColor("rgb(0,0,0)")
