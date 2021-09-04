@@ -20,24 +20,42 @@ async function getTimeGraph(callback, days) {
 
             console.log(parsedData)
 
-            const chart = new QuickChart();
-            chart.setConfig({
+            const barChart = new QuickChart();
+            barChart.setConfig({
+                type: 'bar',
+                data: parsedData
+            })
+
+            barChart.setBackgroundColor("rgb(0,0,0)")
+        
+            const barChartUrl = await barChart.getShortUrl();
+        
+            console.log(barChartUrl)
+
+            const pieChart = new QuickChart();
+            pieChart.setConfig({
                 type: 'pie',
                 data: parsedData
             })
 
-            chart.setBackgroundColor("rgb(0,0,0)")
-        
-            const url = await chart.getShortUrl();
-        
-            console.log(url)
-            const chartMessage = new Discord.MessageEmbed()
+            pieChart.setBackgroundColor("rgb(0,0,0)")
+
+            const pieChartUrl = await pieChart.getShortUrl();
+
+            const barChartMessage = new Discord.MessageEmbed()
                 .setTitle("Time graph")
                 .setColor("#608b81")
-                .setImage(url)
+                .setImage(barChartUrl)
+                .setDescription(`Here are the results for the previous ${days} days`);
+
+            const pieChartMessage = new Discord.MessageEmbed()
+                .setTitle("Time graph")
+                .setColor("#608b81")
+                .setImage(pieChartUrl)
                 .setDescription(`Here are the results for the previous ${days} days`);
         
-            callback(chartMessage);
+            callback(barChartMessage);
+            callback(pieChartMessage);
 
         })
     })
