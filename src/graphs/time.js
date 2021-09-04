@@ -47,7 +47,7 @@ async function getTimeGraph(callback, days) {
             const championMessage = new Discord.MessageEmbed()
                 .setTitle("We have a champion :crown:")
                 .setColour(parsedData.champion.color)
-                .setDescription(`The most active user for the previous ${days} days was ${parsedData.champion.name} with an active time of ${parsedData.champion.time} what a champion :crown:`)
+                .setDescription(`The most active user for the previous ${days} days was ${parsedData.champion.name} with an active time of ${parsedData.champion.timeActive} what a champion :crown:`);
         
             callback(barChartMessage);
             callback(pieChartMessage);
