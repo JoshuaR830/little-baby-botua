@@ -21,22 +21,15 @@ async function getTimeGraph(callback, days) {
             console.log(parsedData)
 
             const barChart = new QuickChart();
-            barChart.setConfig({
-                type: 'bar',
-                data: parsedData.barGraph
-            })
-
+            barChart.setConfig(parsedData.barGraph);
             barChart.setBackgroundColor("rgb(0,0,0)")
-        
             const barChartUrl = await barChart.getShortUrl();
         
             console.log(barChartUrl)
 
             const pieChart = new QuickChart();
             pieChart.setConfig(parsedData.pieChart)
-
             pieChart.setBackgroundColor("rgb(0,0,0)")
-
             const pieChartUrl = await pieChart.getShortUrl();
 
             const barChartMessage = new Discord.MessageEmbed()
@@ -46,13 +39,19 @@ async function getTimeGraph(callback, days) {
                 .setDescription(`Here are the results for the previous ${days} days`);
 
             const pieChartMessage = new Discord.MessageEmbed()
-                .setTitle("Time graph")
+                .setTitle("Most active for time period")
                 .setColor("#608b81")
                 .setImage(pieChartUrl)
-                .setDescription(`Here are the results for the previous ${days} days`);
+                .setDescription(`Collated activity for previous ${days} days`);
+
+            const championMessage = new Discord.MessageEmbed()
+                .setTitle("We have a champion")
+                .setColour(parsedData.champion.color)
+                .setDescription(`The most active user for the previous ${days} days was ${parsedData.champion.name} with an active time of ${parsedData.champion.time} what a champion!`)
         
             callback(barChartMessage);
             callback(pieChartMessage);
+            callback(championMessage);
 
         })
     })
