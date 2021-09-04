@@ -22,7 +22,7 @@ async function getTimeGraph(callback, days) {
 
             const chart = new QuickChart();
             chart.setConfig({
-                type: 'bar',
+                type: 'pie',
                 data: parsedData
             })
 
