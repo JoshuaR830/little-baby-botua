@@ -42,7 +42,7 @@ async function getTimeGraph(callback, days) {
                 .setTitle("Most active for time period")
                 .setColor("#608b81")
                 .setImage(pieChartUrl)
-                .setDescription(`Collated activity for previous ${days} days`);
+                .setDescription(`Collated activity for the previous ${days} days`);
 
             const championMessage = new Discord.MessageEmbed()
                 .setTitle("We have a champion")
