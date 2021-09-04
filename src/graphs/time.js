@@ -51,15 +51,14 @@ async function getTimeGraph(callback, days) {
                 .setColor(argbToRGB(parsedData.champion.color))
                 .setDescription(`The most active user for the previous ${days} days was ${parsedData.champion.name} with an active time of ${parsedData.champion.timeActive} hours what a champion :crown:`);
         
-            // callback(barChartMessage);
-            // callback(pieChartMessage);
+            callback(barChartMessage);
+            callback(pieChartMessage);
             callback(championMessage);
 
         })
     })
 
     function argbToRGB(color) {
-        console.log(color);
         colors = color.substring(color.indexOf('(') + 1, color.length - 1).split(',')
         
         return '#'+ (Number(colors[0].trim())).toString(16).padStart(2, 0) + (Number(colors[1].trim())).toString(16).padStart(2, 0) + (Number(colors[2].trim())).toString(16).padStart(2, 0);
