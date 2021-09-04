@@ -33,10 +33,7 @@ async function getTimeGraph(callback, days) {
             console.log(barChartUrl)
 
             const pieChart = new QuickChart();
-            pieChart.setConfig({
-                type: 'doughnut',
-                data: parsedData.pieChart
-            })
+            pieChart.setConfig(parsedData.pieChart)
 
             pieChart.setBackgroundColor("rgb(0,0,0)")
 
