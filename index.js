@@ -196,7 +196,7 @@ bot.on('message', function(message) {
         wilbur.createWilburCard(sendMessage);
     }
 
-    if (lowerCaseMessage === "/time") {
+    if (lowerCaseMessage === "#time") {
         timeGraph.getTimeGraph(sendMessage);
     }
     
