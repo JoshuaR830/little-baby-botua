@@ -6,7 +6,6 @@ const getTimeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazo
 
 async function getTimeGraph(callback, days) {
     console.log("Time");
-    days = 7;
     console.log(`${getTimeApiGatewayBaseUrl}?days=${days}`);
 
     https.get(`${getTimeApiGatewayBaseUrl}?days=${days}`, (response) => {
