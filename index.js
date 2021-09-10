@@ -59,11 +59,105 @@ bot.ws.on('INTERACTION_CREATE', async interaction => {
     responseManager.manageResponse(bot, interaction);
 })
 
+function calculateIsAfk(channelName) {
+    if (channelName.toLowerCase().includes("afk")) {
+        return true;
+    }
+
+    return false;
+}
+
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
     console.log(newMember)
 
-    // An existing user mutes and deafens
+    // Set default values so variable exists
+    let isAfk = false;
+    let isMuted = false;
+    let isDeafened =false;
+    let isVideoOn = false;
+    let isStreaming = false;
+    let channelName = "";
+
+    // Set actual values if someone joins
+    if (newMember.channelID != null) {
+        isAfk = calculateIsAfk(newMember.channel.name);
+        isMuted = newMember.selfMute || newMember.serverMute;
+        isDeafened = newMember.selfDeaf || newMember.serverDeaf;
+        isVideoOn = newMember.selfVideo;
+        isStreaming = newMember.streaming;
+        channelName = newMember.channel.name;
+    }
+
+    // An existing user mutes and deafens or changes channel
     if(newMember.channelID != null && oldMember.channelID != null) {
+        console.log(`Channel name ${channelName}`)
+        console.log(`Streaming ${isStreaming}`)
+        console.log(`Video ${isVideoOn}`)
+        console.log(`Muted ${isMuted}`)
+        console.log(`Deafened ${isDeafened}`)
+        console.log(`Afk ${isAfk}`)
+
+        let name = whoIs(newMember.id)
+
+        if (name != null) {
+
+            // End the old session
+            if(friendsMap.has(newMember.id)) {
+                console.log(friendsMap.get(newMember.id));
+                leaver = friendsMap.get(newMember.id);
+                // Send disconnection time
+                sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk)
+                friendsMap.delete(newMember.id)
+            }
+
+            // Create new session
+            let friend = new Friend(uuidv4(), name, newMember.channelID, newMember.guild.id)
+            friendsMap.set(newMember.id, friend)
+            
+            // friendsList.push({key: newMember.id, value: friend})
+
+            console.log(friendsMap);
+
+            sendChangedDirectMessage(name, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk);
+
+            // Send new status information
+            sendHttpRequestToLambda(friend.sessionGuid, newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk)
+        }
+
+        // if (oldMember.channel.name === newMember.channel.name) {
+
+        //     if (newMember.selfMute && !oldMember.selfMute) {
+        //         console.log("Gone away, should class as leave and join with mute event")
+        //     } else if (!newMember.selfMute && oldMember.selfMute) {
+        //         console.log("Returned, should class as leave and join with normal event")
+        //     }
+
+        //     if (newMember.selfVideo && !oldMember.selfVideo) {
+        //         console.log("Turned on video, should class as leave and join event")
+        //     } else if (!newMember.selfVideo && oldMember.selfVideo) {
+        //         console.log("Turned off video, should class as leave and join event")
+        //     }
+
+        //     if (newMember.streaming && !oldMember.streaming) {
+        //         console.log("Started streaming, should class as leave and join event")
+        //     } else if (!newMember.streaming && oldMember.streaming) {
+        //         console.log("Started streaming, should class as leave and join event")
+        //     }
+
+        //     // ToDo - add a bunch of lambda properties for stuff - isStreaming, isMuted, isVideo, isAFK, channelName
+
+        //     return;
+        // }
+
+        // console.log(`Left ${oldMember.channel.name}`)
+        // console.log(`Joined ${newMember.channel.name}`)
+        
+        // if (newMember.channel.name.toLowerCase().includes("afk")) {
+        //     console.log("Gone afk channel")
+        // } else if (oldMember.channel.name.toLowerCase().includes("afk")) {
+        //     console.log("No longer afk")
+        // }
+
         return;
     }
 
@@ -85,7 +179,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             console.log(friendsMap);
 
             sendJoinedDirectMessage(name);
-            sendHttpRequestToLambda(friend.sessionGuid, newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true)
+            sendHttpRequestToLambda(friend.sessionGuid, newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk)
         }
 
         // if(newMember.id === joshuaDiscordId) {
@@ -114,7 +208,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             if(friendsMap.has(newMember.id)) {
                 console.log(friendsMap.get(newMember.id));
                 leaver = friendsMap.get(newMember.id);
-                sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false)
+                sendHttpRequestToLambda(leaver.sessionGuid, newMember.id, Date.now(), leaver.serverId, leaver.channelId, false, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk)
                 friendsMap.delete(newMember.id)
             }
 
@@ -157,6 +251,13 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
         directMessagesToSend.forEach(function(id) {
             console.log(id)
             bot.users.cache.get(id).send(`${name} left a voice channel`);
+        })
+    }
+    
+    function sendChangedDirectMessage(name, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk) {
+        directMessagesToSend.forEach(function(id) {
+            console.log(id)
+            bot.users.cache.get(id).send(`${name} changed status. Channel name = ${channelName}, is streaming = ${isStreaming}, is video on = ${isVideoOn}, is muted = ${isMuted}, is deafened = ${isDeafened}, is AFK = ${isAfk}`);
         })
     }
 })
@@ -260,8 +361,8 @@ bot.on('message', function(message) {
     }
 });
 
-function sendHttpRequestToLambda(sessionId, userId, timestamp, serverId, channelId, connectionStatus) {
-    const url = `${timeApiGatewayBaseUrl}?sessionGuid=${sessionId}&userId=${userId}&timestamp=${timestamp}&serverId=${serverId}&channelId=${channelId}&connectionStatus=${connectionStatus}`;
+function sendHttpRequestToLambda(sessionId, userId, timestamp, serverId, channelId, connectionStatus, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk) {
+    const url = `${timeApiGatewayBaseUrl}?sessionGuid=${sessionId}&userId=${userId}&timestamp=${timestamp}&serverId=${serverId}&channelId=${channelId}&connectionStatus=${connectionStatus}&channelName=${channelName}&isStreaming=${isStreaming}&isVideoOn=${isVideoOn}&isMuted=${isMuted}&isDeafened=${isDeafened}&isAfk=${isAfk}`;
     https.get(url, (response) => {
         let data = '';
 
