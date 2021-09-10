@@ -124,40 +124,6 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             sendHttpRequestToLambda(friend.sessionGuid, newMember.id, Date.now(), newMember.guild.id, newMember.channel.id, true, channelName, isStreaming, isVideoOn, isMuted, isDeafened, isAfk)
         }
 
-        // if (oldMember.channel.name === newMember.channel.name) {
-
-        //     if (newMember.selfMute && !oldMember.selfMute) {
-        //         console.log("Gone away, should class as leave and join with mute event")
-        //     } else if (!newMember.selfMute && oldMember.selfMute) {
-        //         console.log("Returned, should class as leave and join with normal event")
-        //     }
-
-        //     if (newMember.selfVideo && !oldMember.selfVideo) {
-        //         console.log("Turned on video, should class as leave and join event")
-        //     } else if (!newMember.selfVideo && oldMember.selfVideo) {
-        //         console.log("Turned off video, should class as leave and join event")
-        //     }
-
-        //     if (newMember.streaming && !oldMember.streaming) {
-        //         console.log("Started streaming, should class as leave and join event")
-        //     } else if (!newMember.streaming && oldMember.streaming) {
-        //         console.log("Started streaming, should class as leave and join event")
-        //     }
-
-        //     // ToDo - add a bunch of lambda properties for stuff - isStreaming, isMuted, isVideo, isAFK, channelName
-
-        //     return;
-        // }
-
-        // console.log(`Left ${oldMember.channel.name}`)
-        // console.log(`Joined ${newMember.channel.name}`)
-        
-        // if (newMember.channel.name.toLowerCase().includes("afk")) {
-        //     console.log("Gone afk channel")
-        // } else if (oldMember.channel.name.toLowerCase().includes("afk")) {
-        //     console.log("No longer afk")
-        // }
-
         return;
     }
 
