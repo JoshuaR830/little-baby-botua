@@ -1,7 +1,7 @@
 const https = require('https');
 const Discord = require('discord.js');
 
-const wilburApiGatewayBaseUrl = 'https://7rxf8z5z9h.execute-api.eu-west-2.amazonaws.com/v0/lambda';
+const wilburApiGatewayBaseUrl = 'https://d3pkth31avpohc.cloudfront.net/';
 
 const url = `${wilburApiGatewayBaseUrl}?imageTime=random&storyItemNumber=1`;
 
