@@ -3,6 +3,7 @@ const QuickChart = require('quickchart-js')
 const https = require('https');
 
 const getTimeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/get-time';
+const achievementImageFolderUrl = "https://generic-images.s3.eu-west-2.amazonaws.com/achievement-images/";
 
 async function getTimeGraph(callback, days) {
     console.log("Time");
@@ -47,12 +48,48 @@ async function getTimeGraph(callback, days) {
 
             const championMessage = new Discord.MessageEmbed()
                 .setTitle("We have a champion :crown:")
-                .setColor(argbToRGB(parsedData.champion.color))
-                .setDescription(`The most active user for the previous ${days} days was ${parsedData.champion.name} with an active time of ${parsedData.champion.timeActive} hours what a champion :crown:`);
-        
+                .setColor(argbToRGB(parsedData.champions.active.color))
+                .setThumbnail(`${achievementImageFolderUrl}/champion.png`)
+                .setDescription(`The most active user for the previous ${days} days was ${parsedData.champions.active.name} with an active time of ${parsedData.champions.active.timeActive} hours what a champion!`);
+                
+            const deafenedMessage = new Discord.MessageEmbed()
+                .setTitle("King of the squid people :squid:")
+                .setColor(argbToRGB(parsedData.champions.deafened.color))
+                .setThumbnail(`${achievementImageFolderUrl}/deafened.png`)
+                .setDescription(`${parsedData.champions.deafened.name} with a deafened time of ${parsedData.champions.deafened.timeActive} hours in the previous ${days} days you were deafened so long that like the squid, you may as well have no ears!`);
+                
+            const mutedMessage = new Discord.MessageEmbed()
+                .setTitle("Captain of the muted mutiny :pirate_flag:")
+                .setThumbnail(`${achievementImageFolderUrl}/muted.png`)
+                .setColor(argbToRGB(parsedData.champions.muted.color))
+                .setDescription(`With a muted time of ${parsedData.champions.muted.timeActive} hours in the previous ${days} days we had no option but to promote ${parsedData.champions.muted.name} to the prestigious position of captain of the muted mutiny!`);
+                
+            const streamingMessage = new Discord.MessageEmbed()
+                .setTitle("We have a Superior Shark :shark:")
+                .setColor(argbToRGB(parsedData.champions.streaming.color))
+                .setThumbnail(`${achievementImageFolderUrl}/streaming.png`)
+                .setDescription(`With a streaming time of ${parsedData.champions.streaming.timeActive} hours in the previous ${days} days, like the mighty shark, normal streams could not hold your superiority, so ${parsedData.champions.streaming.name} takes the title of Superior Shark - congratulations!`);
+                
+            const afkMessage = new Discord.MessageEmbed()
+                .setTitle("Trippy Tourist :palm_tree:")
+                .setColor(argbToRGB(parsedData.champions.afk.color))
+                .setThumbnail(`${achievementImageFolderUrl}/afk.png`)
+                .setDescription(`With ${parsedData.champions.afk.timeActive} hours away in the previous ${days} days, it's clear you're not quite with it, get yourself sorted ${parsedData.champions.afk.name}`);
+                
+            const videoMessage = new Discord.MessageEmbed()
+                .setTitle("Viva la Vlogger :video_camera:")
+                .setColor(argbToRGB(parsedData.champions.video.color))
+                .setThumbnail(`${achievementImageFolderUrl}/video.png`)
+                .setDescription(`Born to be a vlogger, your time on video of ${parsedData.champions.video.timeActive} hours in the previous ${days} days means ${parsedData.champions.video.name} you are closer than anyone else to being a fully fledged vlogger!`);
+
             callback(barChartMessage);
             callback(pieChartMessage);
             callback(championMessage);
+            callback(deafenedMessage);
+            callback(mutedMessage);
+            callback(streamingMessage);
+            callback(afkMessage);
+            callback(videoMessage);
 
         })
     })
