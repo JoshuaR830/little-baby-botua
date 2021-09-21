@@ -3,7 +3,7 @@ const QuickChart = require('quickchart-js')
 const https = require('https');
 
 const getTimeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/get-time';
-const achievementImageFolderUrl = "https://generic-images.s3.eu-west-2.amazonaws.com/achievement-images/";
+const achievementImageFolderUrl = "https://generic-images.s3.eu-west-2.amazonaws.com/achievement-images";
 
 async function getTimeGraph(callback, days) {
     console.log("Time");
@@ -97,7 +97,7 @@ async function getTimeGraph(callback, days) {
                 callback(mutedMessage);
             }
 
-            if (parsedData.champions.video.timeActive > 0) {
+            if (parsedData.champions.streaming.timeActive > 0) {
                 callback(streamingMessage);
             }
 
