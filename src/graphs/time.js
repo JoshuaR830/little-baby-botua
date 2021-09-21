@@ -84,17 +84,39 @@ async function getTimeGraph(callback, days) {
 
             callback(barChartMessage);
             callback(pieChartMessage);
-            callback(championMessage);
-            callback(deafenedMessage);
-            callback(mutedMessage);
-            callback(streamingMessage);
-            callback(afkMessage);
-            callback(videoMessage);
+   
+            if (parsedData.champions.active.timeActive > 0) {
+                callback(championMessage);
+            }
 
+            if (parsedData.champions.deafened.timeActive > 0) {
+                callback(deafenedMessage);
+            }
+
+            if (parsedData.champions.muted.timeActive > 0) {
+                callback(mutedMessage);
+            }
+
+            if (parsedData.champions.video.timeActive > 0) {
+                callback(streamingMessage);
+            }
+
+            if (parsedData.champions.afk.timeActive > 0) {
+                callback(afkMessage);
+            }
+
+            if (parsedData.champions.video.timeActive > 0) {
+                callback(videoMessage);
+            }
         })
     })
 
     function argbToRGB(color) {
+
+        if (color.length === 0) {
+            return "#000000";
+        }
+
         colors = color.substring(color.indexOf('(') + 1, color.length - 1).split(',')
         
         return '#'+ (Number(colors[0].trim())).toString(16).padStart(2, 0) + (Number(colors[1].trim())).toString(16).padStart(2, 0) + (Number(colors[2].trim())).toString(16).padStart(2, 0);
