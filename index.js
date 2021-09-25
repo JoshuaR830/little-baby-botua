@@ -29,16 +29,17 @@ bot.login(TOKEN);
 
 friendsMap = new Map();
 
-jordanDiscordId = process.env.JordanId;
-joshuaDiscordId = process.env.JoshuaId;
-dayleDiscordId = process.env.DayleId;
-declynDiscordId = process.env.DeclynId;
-jonnyDiscordId = process.env.JonnyId;
-lucasDiscordId = process.env.LucasId;
-callanDiscordId = process.env.CallanId;
-andrewDiscordId = process.env.AndrewId;
-martinDiscordId = process.env.MartinId;
-theRoomGuildId = process.env.TheRoomGuildId;
+const jordanDiscordId = process.env.JordanId;
+const joshuaDiscordId = process.env.JoshuaId;
+const dayleDiscordId = process.env.DayleId;
+const declynDiscordId = process.env.DeclynId;
+const jonnyDiscordId = process.env.JonnyId;
+const lucasDiscordId = process.env.LucasId;
+const callanDiscordId = process.env.CallanId;
+const andrewDiscordId = process.env.AndrewId;
+const martinDiscordId = process.env.MartinId;
+const theRoomGuildId = process.env.TheRoomGuildId;
+const timeCommand = process.env.timeCommand;
 
 const timeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/time';
 // const url = `${wilburApiGatewayBaseUrl}?id=timestamp=channelId=connectionStatus=`;
@@ -250,7 +251,9 @@ bot.on('message', function(message) {
 
     function sendLocalMessage(message) {
         let lowerCaseMessage = message.content.toLowerCase()
-        if (lowerCaseMessage === "/time") {
+        console.log(timeCommand)
+        console.log(lowerCaseMessage)
+        if (lowerCaseMessage === timeCommand) {
             timeGraph.getTimeGraph((messageContent) => {
                 sendCustomDirectMessage(messageContent, message.author.id)
             }, 7);
