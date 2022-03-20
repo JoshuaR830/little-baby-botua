@@ -53,11 +53,18 @@ const directMessagesToSend = [joshuaDiscordId]
 var connectedIds = []
 
 bot.on('ready', () => {
-    commandManager.registerCommands(bot, theRoomGuildId)
+    console.log("Registering commands");
+    commandManager.registerCommands(bot, theRoomGuildId);
+    console.log("Commands registered");
 });
 
 bot.ws.on('INTERACTION_CREATE', async interaction => {
-    responseManager.manageResponse(bot, interaction);
+    try {
+        responseManager.manageResponse(bot, interaction);
+    } catch (e) {
+        console.log(e);
+        bot.channels.cache.get(interaction.channel_id).send(e);
+    }
 })
 
 function calculateIsAfk(channelName) {
@@ -286,7 +293,8 @@ bot.on('message', function(message) {
         }
 
         if(lowerCaseMessage === '/wilbur') {
-            wilbur.createWilburCard(sendMessage);
+            const genericQuery = "imageTime=random&storyItemNumber=1"
+            wilbur.createWilburCard(sendMessage, genericQuery);
         }
 
         if (lowerCaseMessage === "#time") {

@@ -2,14 +2,14 @@ const Discord = require('discord.js');
 const QuickChart = require('quickchart-js')
 const https = require('https');
 
+runnerUpCount = process.env.RunnerUpCount;
+
 const getTimeApiGatewayBaseUrl = 'https://a6bvqaoebf.execute-api.eu-west-2.amazonaws.com/v0/get-time';
-const achievementImageFolderUrl = "https://generic-images.s3.eu-west-2.amazonaws.com/achievement-images";
 
 async function getTimeGraph(callback, days) {
     console.log("Time");
     console.log(`${getTimeApiGatewayBaseUrl}?days=${days}`);
-
-    https.get(`${getTimeApiGatewayBaseUrl}?days=${days}`, (response) => {
+    https.get(`${getTimeApiGatewayBaseUrl}?days=${days}&isSingleUser=false&userId=0&shouldShowTopThree=false&championTypes=isActive&championTypes=isDeafened&championTypes=isMuted&championTypes=isStreaming&championTypes=isAfk&championTypes=isVideoOn&championTypes=isReliable`, (response) => {
 
         data = "";
 

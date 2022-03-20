@@ -13,6 +13,9 @@ function registerCommands(bot, id) {
     registerWeatherCoordCommand(bot);
     registerHttpCatCommand(bot);
     registerTimeGraphCommand(bot);
+    // registerStatsCommand(bot);
+    registerMinecraftCommand(bot);
+    registerLegoCommand(bot);
 }
 
 function registerHttpCatCommand(bot) {
@@ -95,6 +98,66 @@ function registerWilburCommand(bot) {
     }})
 }
 
+function registerStatsCommand(bot) {
+    bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
+        name: 'time-stats',
+        description: 'Get a selected stat for a selected number of days',
+        options: [
+            {
+                name: "days",
+                description: "Number of days",
+                type: 10,
+            },
+            {
+                name: "months",
+                description: "Number of months",
+                type: 10,
+            },
+            {
+                name: "years",
+                description: "Number of years",
+                type: 10,
+            },
+            {
+                name: "stat",
+                type: 3,
+                required: false,
+                description: "The specific statistic to see the leader for",
+                choices: [
+                    {
+                        name: "Active",
+                        value: "&championTypes=isActive"
+                    },
+                    {
+                        name: "Muted",
+                        value: "&championTypes=isMuted"
+                    },
+                    {
+                        name: "Streaming",
+                        value: "&championTypes=isStreaming"
+                    },
+                    {
+                        name: "Video",
+                        value: "&championTypes=isVideoOn"
+                    },
+                    {
+                        name: "Reliable",
+                        value: "&championTypes=isReliable"
+                    },
+                    {
+                        name: "Deafened",
+                        value: "&championTypes=isDeafened"
+                    },
+                    {
+                        name: "AFK",
+                        value: "&championTypes=isAfk"
+                    },
+                ]
+            }
+        ]
+    }});
+}
+
 function registerTimeGraphCommand(bot) {
     bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
         name: 'time-graph',
@@ -118,6 +181,22 @@ function registerTimeGraphCommand(bot) {
             ]
         }
     })
+}
+
+function registerMinecraftCommand(bot) {
+    bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
+        name: 'minecraft',
+        type: 1,
+        description: 'Start a minecraft server',
+    }});
+}
+
+function registerLegoCommand(bot) {
+    bot.api.applications(bot.user.id).guilds(guildId).commands.post({data: {
+        name: 'lego-universe',
+        type: 1,
+        description: 'Start a Lego Universe (DLU) server',
+    }});
 }
  
 

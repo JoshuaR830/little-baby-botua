@@ -4,20 +4,25 @@ const httpCat = require('./../cats/http-cat')
 const weather = require('./../weather/weather')
 const dilbert = require('./../dilbert/dilbert')
 const timeGraph = require('./../graphs/time')
+const ec2Servers = require('./../ec2/ec2')
 const genericQuery = "imageTime=random&storyItemNumber=1"
 
 function manageResponse(bot, interaction) {
+    console.log("Manage response");
     switch (interaction.data.name) {
         case "wilbur":
             console.log("WILBUR")
 
             if(interaction.data.options === undefined) {
+                console.log("UNDEFINED");
                 respondToGenericWilburCommand(bot, interaction);
             } else {
+                console.log("KNOWN");
                 handleWilburOptions(bot, interaction);
             }
             break;
         case "cat":
+            console.log("Cat selected")
             respondToRandomCatCommand(bot, interaction);
             break;
         case "dilbert":
@@ -34,6 +39,12 @@ function manageResponse(bot, interaction) {
             break;
         case "http-cat":
             respondToHttpCatCommand(bot, interaction);
+            break;
+        case "minecraft":
+            respondToMinecraftCommand(bot, interaction);
+            break;
+        case "lego-universe":
+            respondToLegoCommand(bot, interaction);
             break;
         default:
             break;
@@ -219,6 +230,38 @@ function handleWilburOptions(bot, interaction) {
             }, `imageTime=&storyItemNumber=${sequenceNumber}`);
         }
     });
+}
+
+function respondToLegoCommand(bot, interaction) {
+    bot.api.interactions(interaction.id, interaction.token).callback.post(
+        {
+            data: {
+                type: 4,
+                data: {
+                    content: "If one is not already running, a Lego Universe (DLU) server will be started soon!"
+            }
+        }
+    });
+
+    ec2Servers.launchServer((messageContent) => {
+        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    }, "Lego-universe");
+}
+
+async function respondToMinecraftCommand(bot, interaction) {
+    await bot.api.interactions(interaction.id, interaction.token).callback.post(
+        {
+            data: {
+                type: 4,
+                data: {
+                    content: "If one is not already running, a Minecraft server will be started soon!"
+            }
+        }
+    });
+
+    ec2Servers.launchServer((messageContent) => {
+        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    }, "Minecraft");
 }
 
 module.exports = {manageResponse : manageResponse}
