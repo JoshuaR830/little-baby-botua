@@ -7,149 +7,91 @@ const timeGraph = require('./../graphs/time')
 const ec2Servers = require('./../ec2/ec2')
 const genericQuery = "imageTime=random&storyItemNumber=1"
 
-function manageResponse(bot, interaction) {
+async function manageResponse(bot, interaction) {
     console.log("Manage response");
-    switch (interaction.data.name) {
+    switch (interaction.commandName) {
         case "wilbur":
             console.log("WILBUR")
-
-            if(interaction.data.options === undefined) {
-                console.log("UNDEFINED");
-                respondToGenericWilburCommand(bot, interaction);
-            } else {
-                console.log("KNOWN");
-                handleWilburOptions(bot, interaction);
-            }
+            console.log(interaction.options.getInteger("sequence"))
+            await respondToWilburCommand(interaction);
             break;
         case "cat":
             console.log("Cat selected")
-            respondToRandomCatCommand(bot, interaction);
+            await respondToRandomCatCommand(interaction);
             break;
         case "dilbert":
-            respondToDilbertCommand(bot, interaction);
+            await respondToDilbertCommand(interaction);
             break;
         case "weather":
-            respondToWeatherCityCommand(bot, interaction);
+            await respondToWeatherCityCommand(interaction);
             break;
         case "weather-coords":
-            respondToWeatherCoordsCommand(bot, interaction);
+            await respondToWeatherCoordsCommand(interaction);
             break;
         case "time-graph":
-            respondToTimeGraphCommand(bot, interaction);
+            await respondToTimeGraphCommand(bot, interaction);
             break;
         case "http-cat":
-            respondToHttpCatCommand(bot, interaction);
+            await respondToHttpCatCommand(interaction);
             break;
         case "minecraft":
-            respondToMinecraftCommand(bot, interaction);
+            await respondToMinecraftCommand(interaction);
             break;
         case "lego-universe":
-            respondToLegoCommand(bot, interaction);
+            await respondToLegoCommand(interaction);
             break;
         default:
             break;
     }
 }
 
-function respondToHttpCatCommand(bot, interaction) {
-    let statusCode = 0;
-    console.log(interaction)
-    interaction.data.options.forEach(option => {
-        console.log(option)
-        if(option.name === "status-code") {
-            statusCode = option.value;
-        }
-    });
+async function respondToHttpCatCommand(interaction) {
+    let statusCode = interaction.options.getInteger("status-code") ?? 404;
+    await interaction.deferReply();
 
-    httpCat.getHttpCatImage((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        content: messageContent
-                }
-            }
-        });
+    httpCat.getHttpCatImage(async (messageContent) => {
+        await interaction.editReply({content: messageContent});
     }, statusCode);
 }
 
-function respondToWeatherCoordsCommand(bot, interaction) {
+async function respondToWeatherCoordsCommand(interaction) {
 
-    let lat = 0;
-    let lon = 0;
+    let lat = interaction.options.getNumber("lat") ?? 0;
+    let lon = interaction.options.getNumber("lon") ?? 0;
 
-    interaction.data.options.forEach(option => {
-        if(option.name === "lat") {
-            lat = option.value;
-        } else if (option.name === "lon") {
-            lon = option.value;
-        }
-    });
+    await interaction.deferReply();
 
-    weather.getWeatherByLatLon((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        embeds: [messageContent]
-                }
-            }
-        });
+    weather.getWeatherByLatLon(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]})
     }, lat, lon);
 }
 
-function respondToWeatherCityCommand(bot, interaction) {
+async function respondToWeatherCityCommand(interaction) {
 
-    let cityName = "";
+    let cityName = interaction.options.getString("city") ?? "Carlisle";
+    await interaction.deferReply();
 
-    interaction.data.options.forEach(option => {
-        if(option.name === "city") {
-            cityName = option.value;
-        }
-    });
-
-    weather.getWeatherByCity((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        embeds: [messageContent]
-                }
-            }
-        });
+    weather.getWeatherByCity(async (messageContent) => {
+        interaction.editReply({embeds: [messageContent]});
     }, cityName);
 }
 
-function respondToDilbertCommand(bot, interaction) {
-    dilbert.getDilbertStrip((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        content: messageContent
-                }
-            }
-        });
+async function respondToDilbertCommand(interaction) {
+    await interaction.deferReply();
+    dilbert.getDilbertStrip(async (messageContent) => {
+        await interaction.editReply({content: messageContent});
     });
 }
 
-function respondToTimeGraphCommand(bot, interaction) {
+async function respondToTimeGraphCommand(bot, interaction) {
 
     let days = 0;
 
-    interaction.data.options.forEach(option => {
-        if(option.name === "days") {
-            days += option.value;
-        } else if (option.name === "months") {
-            days += (option.value * 30);
-        } else if (option.name === "years") {
-            days += (option.value * 365);
-        }
-    });
+    days = interaction.options.getInteger("days") ?? 0;
+    months = interaction.options.getInteger("months") ?? 0;
+    years = interaction.options.getInteger("years") ?? 0;
+
+    days += (months * 30) + (years * 356);
 
     // timeGraph.getTimeGraph((messageContent) => {
     //     bot.api.interactions(interaction.id, interaction.token).callback.post(
@@ -163,105 +105,81 @@ function respondToTimeGraphCommand(bot, interaction) {
     //     });
     // }, days);
 
+    // await interaction.deferReply();
 
-    bot.api.interactions(interaction.id, interaction.token).callback.post(
-        {
-            data: {
-                type: 4,
-                data: {
-                    content: "Collating your data, won't be long... (whistles)"
-            }
-        }
-    });
+    // bot.api.interactions(interaction.id, interaction.token).callback.post(
+    //     {
+    //         data: {
+    //             type: 4,
+    //             data: {
+    //                 content: "Collating your data, won't be long... (whistles)"
+    //         }
+    //     }
+    // });
+    await interaction.deferReply();
 
-    timeGraph.getTimeGraph((messageContent) => {
-        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    timeGraph.getTimeGraph(async (messageContent) => {
+        console.log(messageContent)
+        await interaction.editReply({content: "The results are in", ephemeral: true})
+        // console.log(bot.channels.cache)
+        bot.channels.cache.get(interaction.channelId).send({embeds: [messageContent]});
     }, days);
-
 }
 
-function respondToRandomCatCommand(bot, interaction) {
-    cat.getRandomCatImage((messageContent) => {
-        bot.api.interactions(interaction.id, interaction.token).callback.post(
-            {
-                data: {
-                    type: 4,
-                    data: {
-                        content: messageContent
-                }
-            }
-        });
+async function respondToRandomCatCommand(interaction) {
+    await interaction.deferReply();
+    cat.getRandomCatImage(async (messageContent) => {
+        await interaction.editReply({content: messageContent});
     })
-}
+};
 
-function respondToGenericWilburCommand(bot, interaction) {
-    bot.api.interactions(interaction.id, interaction.token).callback.post(
-        {
-            data: {
-                type: 4,
-                data: {
-                    content: "Wilbur is hiding, just completing the seek process, bare with!"
-            }
-        }
-    });
+async function respondToWilburCommand(interaction) {
+    sequenceNumber = interaction.options.getInteger("sequence");
 
-    wilbur.createWilburCard((messageContent) => {
-        bot.channels.cache.get(interaction.channel_id).send(messageContent);
-    }, genericQuery);
-}
+    let query = genericQuery;
+    if(sequenceNumber != null)
+        query = `imageTime=&storyItemNumber=${sequenceNumber}`;
+    
+    await interaction.deferReply();
 
-function handleWilburOptions(bot, interaction) {
-    interaction.data.options.forEach(option => {
-        if(option.name === "sequence") {
-            let sequenceNumber = option.value;
+    wilbur.createWilburCard(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]});
+    }, query);
+};
 
-            bot.api.interactions(interaction.id, interaction.token).callback.post(
-                {
-                    data: {
-                        type: 4,
-                        data: {
-                        content: `Once upon a time there was a marmot called Wilbur then in adventure ${sequenceNumber}, this happened:`
-                    }
-                }
-            });
+async function respondToLegoCommand(interaction) {
+    await interaction.deferReply();
+    // bot.api.interactions(interaction.id, interaction.token).callback.post(
+    //     {
+    //         data: {
+    //             type: 4,
+    //             data: {
+    //                 content: "If one is not already running, a Lego Universe (DLU) server will be started soon!"
+    //         }
+    //     }
+    // });
 
-            wilbur.createWilburCard((messageContent) => {
-                bot.channels.cache.get(interaction.channel_id).send(messageContent);
-            }, `imageTime=&storyItemNumber=${sequenceNumber}`);
-        }
-    });
-}
-
-function respondToLegoCommand(bot, interaction) {
-    bot.api.interactions(interaction.id, interaction.token).callback.post(
-        {
-            data: {
-                type: 4,
-                data: {
-                    content: "If one is not already running, a Lego Universe (DLU) server will be started soon!"
-            }
-        }
-    });
-
-    ec2Servers.launchServer((messageContent) => {
-        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    ec2Servers.launchServer(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]})
     }, "Lego-universe");
-}
+};
 
-async function respondToMinecraftCommand(bot, interaction) {
-    await bot.api.interactions(interaction.id, interaction.token).callback.post(
-        {
-            data: {
-                type: 4,
-                data: {
-                    content: "If one is not already running, a Minecraft server will be started soon!"
-            }
-        }
-    });
+async function respondToMinecraftCommand(interaction) {
+    // await bot.api.interactions(interaction.id, interaction.token).callback.post(
+    //     {
+    //         data: {
+    //             type: 4,
+    //             data: {
+    //                 content: "If one is not already running, a Minecraft server will be started soon!"
+    //         }
+    //     }
+    // });
 
-    ec2Servers.launchServer((messageContent) => {
-        bot.channels.cache.get(interaction.channel_id).send(messageContent);
+    await interaction.deferReply();
+
+    ec2Servers.launchServer(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]})
     }, "Minecraft");
-}
+};
 
 module.exports = {manageResponse : manageResponse}

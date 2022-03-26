@@ -19,9 +19,9 @@ const Commands = require('./src/commands')
 const commandManager = require('./src/commands/register-commands')
 const responseManager = require('./src/commands/command-response')
 
-const Discord = require('discord.js');
+const {Client, Intents } = require('discord.js');
 const { cwd } = require('process');
-const bot = new Discord.Client();
+const bot = new Client({intents: [Intents.FLAGS.GUILDS]});
 
 const TOKEN = process.env.TOKEN;
 
@@ -58,7 +58,14 @@ bot.on('ready', () => {
     console.log("Commands registered");
 });
 
-bot.ws.on('INTERACTION_CREATE', async interaction => {
+bot.on("interactionCreate", async (interaction) => {
+    console.log("Interaction")
+    if(!interaction.isCommand()) {
+        return;
+    }
+
+    console.log(interaction);
+
     try {
         responseManager.manageResponse(bot, interaction);
     } catch (e) {
