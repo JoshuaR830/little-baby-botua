@@ -7,6 +7,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 async function registerCommands(bot, id) {
 
+    console.log(`Register commands function, guild from env ${process.env.TheRoomGuildId}`)
+    console.log(`Register commands function, guild id ${id}`)
     const guildId = id;
 
     const rest = new REST({ version: '9'}).setToken(process.env.TOKEN);

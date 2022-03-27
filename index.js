@@ -54,8 +54,9 @@ var connectedIds = []
 
 bot.on('ready', () => {
     console.log("Registering commands");
+    console.log(`Guild id ${theRoomGuildId}`)
+    console.log(`Process env guild id ${process.env.TheRoomGuildId}`)
     commandManager.registerCommands(bot, theRoomGuildId);
-    console.log("Commands registered");
 });
 
 bot.on("interactionCreate", async (interaction) => {
