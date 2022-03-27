@@ -21,7 +21,7 @@ const responseManager = require('./src/commands/command-response')
 
 const {Client, Intents } = require('discord.js');
 const { cwd } = require('process');
-const bot = new Client({intents: [Intents.FLAGS.GUILDS]});
+const bot = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES]});
 
 const TOKEN = process.env.TOKEN;
 
