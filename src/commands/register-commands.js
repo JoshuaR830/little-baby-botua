@@ -1,6 +1,5 @@
 const { type } = require("os");
 const CommandBuilder = require("./command-builder");
-var guildId = ''
 
 const { REST } = require('@discordjs/rest');
 const {Routes } = require('discord-api-types/v9');
@@ -8,7 +7,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 async function registerCommands(bot, id) {
 
-    guildId = id;
+    const guildId = id;
 
     const rest = new REST({ version: '9'}).setToken(process.env.TOKEN);
 
