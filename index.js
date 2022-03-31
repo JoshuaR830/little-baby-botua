@@ -84,7 +84,8 @@ function calculateIsAfk(channelName) {
 }
 
 bot.on('voiceStateUpdate', (oldMember, newMember) => {
-    console.log(newMember)
+    console.log("A", newMember.channelId)
+    console.log("B", oldMember.channelId)
 
     // Set default values so variable exists
     let isAfk = false;
@@ -94,8 +95,10 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     let isStreaming = false;
     let channelName = "";
 
+
+
     // Set actual values if someone joins
-    if (newMember.channelID != null) {
+    if (newMember.channelId != null) {
         isAfk = calculateIsAfk(newMember.channel.name);
         isMuted = newMember.selfMute || newMember.serverMute;
         isDeafened = newMember.selfDeaf || newMember.serverDeaf;
@@ -105,7 +108,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     }
 
     // An existing user mutes and deafens or changes channel
-    if(newMember.channelID != null && oldMember.channelID != null) {
+    if(newMember.channelId != null && oldMember.channelId != null) {
         console.log(`Channel name ${channelName}`)
         console.log(`Streaming ${isStreaming}`)
         console.log(`Video ${isVideoOn}`)
@@ -127,7 +130,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             }
 
             // Create new session
-            let friend = new Friend(uuidv4(), name, newMember.channelID, newMember.guild.id)
+            let friend = new Friend(uuidv4(), name, newMember.channelId, newMember.guild.id)
             friendsMap.set(newMember.id, friend)
             
             // friendsList.push({key: newMember.id, value: friend})
@@ -146,14 +149,14 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
     let name = whoIs(newMember.id)
 
     // A new user joins
-    if(newMember.channelID !== null && newMember.channelID !== undefined) {
+    if(newMember.channelId !== null && newMember.channelId !== undefined) {
 
         if (name != null) {
             if(friendsMap.has(newMember.id)) {
                 friendsMap.delete(newMember.id)
             }
 
-            let friend = new Friend(uuidv4(), name, newMember.channelID, newMember.guild.id)
+            let friend = new Friend(uuidv4(), name, newMember.channelId, newMember.guild.id)
             friendsMap.set(newMember.id, friend)
             
             // friendsList.push({key: newMember.id, value: friend})
@@ -181,7 +184,7 @@ bot.on('voiceStateUpdate', (oldMember, newMember) => {
             bot.users.cache.get(joshuaDiscordId).send("Andrew joined the channel");
         }
     }
-    else if (newMember.channelID === null || newMember.channelID === undefined) {
+    else if (newMember.channelId === null || newMember.channelId === undefined) {
         let name = whoIs(newMember.id)
 
         if (name != null) {
