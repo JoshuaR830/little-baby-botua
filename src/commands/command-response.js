@@ -40,6 +40,12 @@ async function manageResponse(bot, interaction) {
         case "lego-universe":
             await respondToLegoCommand(interaction);
             break;
+        case "stop-minecraft":
+            await respondToStopMinecraftCommand(interaction);
+            break;
+        case "stop-lego-universe":
+            await respondToStopLegoUniverseCommand(interaction);
+            break;
         default:
             break;
     }
@@ -181,5 +187,21 @@ async function respondToMinecraftCommand(interaction) {
         await interaction.editReply({embeds: [messageContent]})
     }, "Minecraft");
 };
+
+async function respondToStopMinecraftCommand(interaction) {
+    await interaction.deferReply();
+
+    ec2Servers.stopServer(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]})
+    }, "Minecraft");
+}
+
+async function respondToStopLegoUniverseCommand(interaction) {
+    await interaction.deferReply();
+
+    ec2Servers.stopServer(async (messageContent) => {
+        await interaction.editReply({embeds: [messageContent]})
+    }, "Lego-universe");
+}
 
 module.exports = {manageResponse : manageResponse}

@@ -90,7 +90,17 @@ async function registerCommands(bot, id) {
         .setDescription('Start a Lego Universe (DLU) server')
         .toJSON();
 
-    var commandsList = ([randomCatCommand, wilburCommand, dilbertCommand, weatherCityCommand, weatherCoordCommand, httpCatCommand, timeGraphCommand, minecraftCommand, withLegoCommand]);
+    const stopMinecraftCommand = new SlashCommandBuilder()
+        .setName('stop-minecraft')
+        .setDescription("Stop a running Minecraft server")
+        .toJSON();
+
+    const stopLegoUniverseCommand = new SlashCommandBuilder()
+        .setName('stop-lego-universe')
+        .setDescription("Stop a running Lego Universe server")
+        .toJSON();
+
+    var commandsList = ([randomCatCommand, wilburCommand, dilbertCommand, weatherCityCommand, weatherCoordCommand, httpCatCommand, timeGraphCommand, minecraftCommand, withLegoCommand, stopMinecraftCommand, stopLegoUniverseCommand]);
 
     (async () => {
         try {
